@@ -1,21 +1,17 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import TodoItems from './TodoItems'
 
 const Todo = () => {
 
    const inputRef = useRef()
-   const [todoList, setTodoLst] = useState([]);
-
-
+   const [todoList, setTodoLst] = useState(localStorage.getItem("todos") ? JSON.parse(localStorage.getItem("todos")) : []);
 
    const add = () => {
       const inputText = inputRef.current.value.trim()
 
-
       if (inputText === "") {
          return null;
       }
-
 
       const newTodo = {
          id: Date.now(),
@@ -25,9 +21,30 @@ const Todo = () => {
       setTodoLst((prev) => [...prev, newTodo]);
 
       inputRef.current.value = "";
-
    }
 
+   const deleteTodo = (id) => {
+      setTodoLst((prevTodos) => {
+         return prevTodos.filter((todo) => todo.id !== id)
+      })
+   }
+
+   const toggle = (id) => {
+
+      setTodoLst((prevTodos) => {
+
+         return prevTodos.map((todo) => {
+            if (todo.id === id) {
+               return { ...todo, isComplete: !todo.isComplete }
+            }
+            return todo
+         })
+      })
+   }
+
+   useEffect(() => {
+      localStorage.setItem("todos", JSON.stringify(todoList))
+   }, [todoList])
 
 
    return (
@@ -52,7 +69,7 @@ const Todo = () => {
 
          <div>
             {todoList.map((item, index) => {
-               return <TodoItems key={index} text={item.text} id={item.id} isComplete={item.isComplete} />
+               return <TodoItems key={index} text={item.text} id={item.id} isComplete={item.isComplete} deleteTodo={deleteTodo} toggle={toggle} />
             })}
 
 
