@@ -7,7 +7,6 @@ const errorMessage = document.getElementById('tooltip')
 addTaskBtn.addEventListener('click', () => {
 
    if (inputBox.value === '') {
-      // alert("You must write something!");
       errorMessage.classList.remove('inactive')
 
    } else {
@@ -20,7 +19,6 @@ addTaskBtn.addEventListener('click', () => {
       span.innerHTML = "\u00d7"
       li.appendChild(span);
    }
-
    inputBox.value = "";
    saveData()
 
@@ -31,8 +29,10 @@ addTaskBtn.addEventListener('click', () => {
 listContainer.addEventListener('click', function (e) {
    if (e.target.tagName === "LI") {
       e.target.classList.toggle("checked");
+      saveData()
    } else if (e.target.tagName === "SPAN") {
       e.target.parentElement.remove();
+      saveData()
 
    }
 }, false);
