@@ -17,7 +17,7 @@
 
    <div class="card">
       <div class="search">
-         <input type="text" placeholder="Enter City Name..." spellcheck="false">
+         <input name="search" type="text" placeholder="Enter City Name..." spellcheck="false">
          <button><img src="./images/search.png" alt=""></button>
       </div>
       <div class="weather">
@@ -38,14 +38,89 @@
                <img src="images/wind.png">
                <div>
                   <p class="wind">15km/h</p>
-                  <p>Wind Speed</p>
+                  <p>Wind Spaeed</p>
                </div>
             </div>
 
          </div>
       </div>
+
+
+
    </div>
 
+   <div class="warning">
+      <div class="tool-tip">
+         <p>Enter City into Search Bar</p>
+      </div>
+
+   </div>
+
+
+
+
+
+   <script>
+      const apiURL = "https://api.openweathermap.org/data/2.5/weather?units=metric&q="
+      const apiKey = "8229bc8a46575ed3c39b9df4f9e6cdfa"
+      const searchBox = document.querySelector(".search input")
+      const searchBtn = document.querySelector(".search button")
+      const weatherIcon = document.querySelector(".weather-icon")
+
+      const displayWeather = document.querySelector('.weather')
+      const warning = document.querySelector('.warning')
+
+      async function checkWeather(city) {
+
+         const response = await fetch(apiURL + city + `&appid=${apiKey}`)
+         let data = await response.json();
+
+         console.log(data);
+
+
+         document.querySelector(".city").innerHTML = data.name;
+         document.querySelector(".temp").innerHTML = Math.floor(data.main.temp) + "°C";
+         document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+         document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+
+
+         if (data.weather[0].main === "Clouds") {
+            weatherIcon.src = "images/clouds.png"
+         } else if (data.weather[0].main === "Clear") {
+            weatherIcon.src = "images/clear.png"
+         } else if (data.weather[0].main === "Rain") {
+            weatherIcon.src = "images/rain.png"
+         } else if (data.weather[0].main === "Drizzle") {
+            weatherIcon.src = "images/drizzle.png"
+         } else if (data.weather[0].main === "Mist") {
+            weatherIcon.src = "images/mist.png"
+         }
+
+      }
+
+
+      searchBtn.addEventListener("click", () => {
+
+         if (searchBox.value === "") {
+            warning.classList = "display-ui"
+
+
+         } else {
+            warning.classList = "remove-ui"
+            checkWeather(searchBox.value)
+            searchBox.value = ""
+            displayWeather.classList = "display-ui"
+
+         }
+
+         // console.log(searchBox.value);
+
+         // console.log(displayWeather.classList);
+
+      })
+
+
+   </script>
    <script src="./script.js"></script>
 </body>
 
